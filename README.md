@@ -55,7 +55,7 @@ sudo pacman -S ffmpeg
 ```
 #### Windows
 
-Download the FFmpeg release for Windows from FFmpeg's official website.
+Download the FFmpeg release for Windows from FFmpeg's official website. ![Text](https://www.ffmpeg.org/download.html)
 
 - Extract the downloaded zip file to a desired location (e.g., C:\ffmpeg).
 
