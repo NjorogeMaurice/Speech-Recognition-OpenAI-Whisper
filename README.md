@@ -70,6 +70,7 @@ brew install ffmpeg
 
 ```bash
 git clone https://github.com/NjorogeMaurice/Speech-Recognition-OpenAI-Whisper.git
+cd Speech-Recognition-OpenAI-Whisper
 ```
 
 ### Install Python Dependencies
