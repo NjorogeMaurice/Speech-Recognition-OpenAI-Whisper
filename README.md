@@ -112,7 +112,6 @@ Open your web browser and go to http://127.0.0.1:5000/ to use the application.
 
 Feel free to contribute to this project by opening an issue or submitting a pull request. Contributions are welcome!
 
-This is sub project of a 
 
 
 
