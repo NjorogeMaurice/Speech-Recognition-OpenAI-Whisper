@@ -1,8 +1,19 @@
 # Speech-Recognition-OpenAI-Whisper
-This project is a web-based application that utilizes OpenAI's Whisper for speech-to-text conversion. The application allows users to upload audio files or record audio directly from their browser, and then converts the speech in these audio files to text using the Whisper model.
+This is a web-based application that utilizes OpenAI's Whisper for speech-to-text conversion. The application allows users to upload audio files or record audio directly from their browser and then convert the speech in these audio files to text using the Whisper model.
 
 ![image](https://github.com/user-attachments/assets/30a84b3e-b186-4869-a60d-732802d4f7b2)
 
+This project is a sub-project of a larger initiative aimed at simplifying and enhancing the work of health officers. The overarching goal of the larger project is to develop innovative tools and technologies that streamline healthcare processes, improve data accuracy, and enhance patient care.
+
+### Role of This Sub-Project 
+
+This specific sub-project focuses on leveraging speech recognition technology to assist health officers in transcribing audio recordings of patient interactions, meetings, and other relevant communications. By using OpenAI's Whisper, the application aims to: 
+
+- **Reduce Manual Effort**: Minimize the time and effort required for manual transcription of audio recordings.
+
+- **Improve Efficiency**: Enable health officers to quickly convert spoken words into written text, allowing them to focus more on patient care and less on administrative tasks.
+
+- **Enhance Accessibility**: Provide a user-friendly interface for both uploading existing audio files and recording new audio directly from the browser. By integrating this speech recognition application into the larger project.
 
 ## Features 
 
@@ -95,6 +106,12 @@ python -m flask run
 ```
 
 Open your web browser and go to http://127.0.0.1:5000/ to use the application.
+
+### Contributing
+
+Feel free to contribute to this project by opening an issue or submitting a pull request. Contributions are welcome!
+
+This is sub project of a 
 
 
 
