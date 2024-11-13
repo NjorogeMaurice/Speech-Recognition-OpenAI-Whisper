@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom spinner styles */
+        .spinner {
+            border: 4px solid transparent;
+            border-top-color: #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-8">
+        <div class="max-w-full sm:max-w-lg md:max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">Speech-to-Text Application</h1>
+
+            <!-- Audio File Upload Form -->
+            <div class="audio-upload mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Upload Audio File</h2>
+                <form id="uploadForm" enctype="multipart/form-data" class="flex flex-col items-center">
+                    <input type="file" name="file" id="fileInput" accept="audio/*" required class="mb-4 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition ease-in-out duration-200">
+                        Upload and Transcribe
+                    </button>
+                </form>
+                <div id="uploadSpinner" class="hidden mt-4 flex justify-center items-center">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Audio Recording Section -->
+            <div class="audio-record mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Record Audio</h2>
+                <div class="flex flex-col items-center">
+                    <button id="recordButton" class="bg-green-500 text-white px-6 py-3 rounded-lg mb-4 hover:bg-green-600 transition duration-200">Start Recording</button>
+                    <button id="stopButton" class="bg-red-500 text-white px-6 py-3 rounded-lg mb-4 hover:bg-red-600 transition duration-200" disabled>Stop Recording</button>
+                    <audio id="audioPlayback" controls class="w-full mt-4 mb-4"></audio>
+                    <button id="submitButton" class="bg-blue-500 text-white px-6 py-3 rounded-lg mb-4 hover:bg-blue-600 transition duration-200" style="display: none;">Submit Recording</button>
+                    <div id="recordingSpinner" class="hidden flex justify-center items-center">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transcription Result -->
+            <div id="transcriptionResult" class="mt-6">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Transcription Result</h2>
+                <p id="resultText" class="bg-gray-200 p-4 rounded-lg text-gray-700"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const submitButton = document.getElementById('submitButton');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const uploadForm = document.getElementById('uploadForm');
+        const resultText = document.getElementById('resultText');
+        const uploadSpinner = document.getElementById('uploadSpinner');
+        const recordingSpinner = document.getElementById('recordingSpinner');
+        const fileInput = document.getElementById('fileInput');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Handle audio recording
+        recordButton.addEventListener('click', () => {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/m4a' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPlayback.src = audioUrl;
+
+                        // Show Submit button
+                        submitButton.style.display = 'block';
+
+                        // Enable Submit functionality
+                        submitButton.addEventListener('click', () => {
+                            recordingSpinner.classList.remove('hidden');
+                            const formData = new FormData();
+                            formData.append('file', audioBlob, 'recording.m4a');
+
+                            fetch('/upload', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                resultText.innerText = data.transcribed_text;
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            })
+                            .finally(() => {
+                                recordingSpinner.classList.add('hidden');
+                            });
+                        });
+                    });
+
+                    recordButton.disabled = true;
+                    stopButton.disabled = false;
+                });
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+        });
+
+        // Handle file upload
+        uploadForm.addEventListener('submit', event => {
+            event.preventDefault();
+            uploadSpinner.classList.remove('hidden');
+
+            const formData = new FormData(uploadForm);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultText.innerText = data.transcribed_text;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                uploadSpinner.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
