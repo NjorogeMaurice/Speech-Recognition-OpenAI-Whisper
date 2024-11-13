@@ -1,6 +1,9 @@
 # Speech-Recognition-OpenAI-Whisper
 This project is a web-based application that utilizes OpenAI's Whisper for speech-to-text conversion. The application allows users to upload audio files or record audio directly from their browser, and then converts the speech in these audio files to text using the Whisper model.
 
+![image](https://github.com/user-attachments/assets/30a84b3e-b186-4869-a60d-732802d4f7b2)
+
+
 ## Features 
 
 - **Audio Upload**: Users can upload audio files in various formats (e.g., MP3, M4A, WAV) for speech recognition. 
